@@ -3,8 +3,8 @@ package com.netcracker.study.objects.borders;
 public class Wall implements BorderObject{
     int thickness;
 
-    public void shoot() {
-        //tbd
+    public void onShoot() {
+        //Nothing should happen, at least, until messages implementation
     }
 
     public Wall() {

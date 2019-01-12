@@ -1,24 +1,17 @@
 package com.netcracker.study.general;
 
-import com.netcracker.study.objects.borders.*;
+import com.netcracker.study.objects.borders.BorderObject;
+import com.netcracker.study.objects.borders.Passage;
 
 public class BordersField {
     private int width;
     private int height;
     private BorderObject[] borders;
 
-    public enum Direction {
-        TOP,
-        BOTTOM,
-        LEFT,
-        RIGHT
-    }
-
-
     public BordersField(int width, int height){
         this.width = width;
         this.height = height;
-        this.borders = new BorderObject[totalCountOfBorders(width,height)];
+        this.borders = new BorderObject[totalCountOfBorders(width, height)];
     }
 
     private int totalCountOfBorders(int width, int height){
@@ -39,13 +32,11 @@ public class BordersField {
 
         Integer index;
         if (x1 == x2) {
-            //vertical border
-            int topTile = Math.max(y1,y2);
+            int topTile = Math.max(y1, y2);
             index = topTile*(2*width+1) + x1;
             return index;
         } else {
-            //horizontal border
-            int rightTile = Math.max(x1,x2);
+            int rightTile = Math.max(x1, x2);
             index = y1*(2*width+1) + width + rightTile;
             return index;
         }
@@ -54,17 +45,22 @@ public class BordersField {
     private Integer getBorderByDirection(int x, int y, Direction dir) {
 
         switch (dir) {
-            case TOP: return getBorderBetweenTiles(x,x,y,y+1);
-            case BOTTOM: return getBorderBetweenTiles(x,x,y,y-1);
-            case LEFT: return getBorderBetweenTiles(x,x-1,y,y);
-            case RIGHT: return getBorderBetweenTiles(x,x+1,y,y);
+
+            case TOP: return getBorderBetweenTiles(x, x, y, y+1);
+
+            case BOTTOM: return getBorderBetweenTiles(x, x, y, y-1);
+
+            case LEFT: return getBorderBetweenTiles(x, x-1, y, y);
+
+            case RIGHT: return getBorderBetweenTiles(x, x+1, y, y);
+
         }
 
         throw new RuntimeException("You somehow managed to circumvent full switch on destination enum. What");
     }
 
     public void placePassage (int x, int y, Direction dir) {
-        this.borders[getBorderByDirection(x,y,dir)] = new Passage();
+        this.borders[getBorderByDirection(x, y, dir)] = new Passage();
     }
 
     public void placeBorderDefault (int x, int y, Direction dir, Class C) throws InstantiationException, IllegalAccessException{
@@ -72,6 +68,6 @@ public class BordersField {
     }
 
     public BorderObject getBorderReference(int x, int y, Direction dir) {
-        return this.borders[getBorderByDirection(x,y,dir)];
+        return this.borders[getBorderByDirection(x, y, dir)];
     }
 }
