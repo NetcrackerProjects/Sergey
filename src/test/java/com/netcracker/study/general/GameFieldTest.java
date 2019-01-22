@@ -19,5 +19,7 @@ public class GameFieldTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {gameField.getBorderReference(10, 20, Direction.RIGHT);});
         Assertions.assertEquals(testWall, gameField.getBorderReference(0, 1, Direction.BOTTOM));
         Assertions.assertEquals(testPassage, gameField.getBorderReference(1, 1, Direction.BOTTOM));
+        Assertions.assertEquals(testWall, gameField.getBorderReference(3, 3, Direction.TOP));
+        Assertions.assertEquals(testPassage, gameField.getBorderReference(3, 3, Direction.RIGHT));
     }
 }

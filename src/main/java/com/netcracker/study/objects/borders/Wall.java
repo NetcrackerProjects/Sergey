@@ -13,6 +13,20 @@ public class Wall extends BorderObject{
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        Wall other = (Wall) obj;
+        if (other.getThickness() != this.getThickness())
+            return false;
+        return true;
+    }
+
+    @Override
     public void onShoot() {
         //Nothing should happen, at least, until messages implementation
     }

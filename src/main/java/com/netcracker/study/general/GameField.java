@@ -30,12 +30,37 @@ public class GameField {
             while (scan.hasNextLine()){
                 mapLines.add(scan.nextLine());
             }
-            this.width = (mapLines.get(0).length()-1)/2;
-            this.height = (mapLines.size()-1)/2;
+            int tw = mapLines.get(0).length();
+            int th = mapLines.size();
+            this.width = (tw-1)/2;
+            this.height = (th-1)/2;
+            borders = new BorderObject[totalCountOfBorders(width, height)];
 
-            for (int i = mapLines.size()-1; i > 0; i = i - 2){
-
+            int borderindex;
+            String curline;
+            for (int i = 0; i < height; i = i+1) {
+                curline = mapLines.get(th-1 - 2*i);
+                for (int j = 0; j < width; j = j + 1){
+                    borderindex = getBorderByDirection(j, i, Direction.BOTTOM);
+                    borders[borderindex] = interpBorderSymbol(curline.charAt(1+j*2));
+                }
             }
+            curline = mapLines.get(0);
+            for (int j = 0; j < width; j = j + 1){
+                borderindex = getBorderByDirection(j, height-1, Direction.TOP);
+                borders[borderindex] = interpBorderSymbol(curline.charAt(1+j*2));
+            }
+            for (int i = 0; i < height; i = i+1) {
+                curline = mapLines.get(th - 2 - 2*i);
+                for (int j = 0; j < width; j = j + 1){
+                    borderindex = getBorderByDirection(j, i, Direction.LEFT);
+                    borders[borderindex] = interpBorderSymbol(curline.charAt(j*2));
+                }
+                borderindex = getBorderByDirection(width-1, i, Direction.RIGHT);
+                borders[borderindex] = interpBorderSymbol(curline.charAt(width*2));
+            }
+
+
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("Map file not found!");
         }
@@ -43,6 +68,18 @@ public class GameField {
 
     private int totalCountOfBorders(int width, int height){
         return ((2*width+1)*height + width);
+    }
+
+    private BorderObject interpBorderSymbol(char c) {
+        switch (c) {
+            case ' ':
+                return new Wall(0);
+            case '|':
+                return new Wall(1);
+            case  '-':
+                return new Wall(1);
+        }
+        throw new IllegalArgumentException("Found illegal symbol while reading for borders: " + c);
     }
 
     private Integer getBorderBetweenTiles(int x1, int x2, int y1, int y2) throws IllegalArgumentException {
@@ -53,8 +90,8 @@ public class GameField {
         if (x1 - x2 == 0 && y1 - y2 == 0) {
             throw new IllegalArgumentException("Tiles selected are actually the same tile => unable to determine border");
         }
-        if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0 || x1 > width + 1 || x2 > width + 1 || y1 > height + 1 || y2 > height + 1) {
-            throw new IllegalArgumentException("One of the tiles lies beyond game space!");
+        if (x1 < -1 || x2 < -1 || y1 < -1 || y2 < -1 || x1 > width + 1 || x2 > width + 1 || y1 > height + 1 || y2 > height + 1) {
+            throw new IllegalArgumentException("One of the tiles is not at least adjacent to game space!");
         }
 
         Integer index;
