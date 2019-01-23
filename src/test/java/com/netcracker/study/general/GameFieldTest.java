@@ -11,41 +11,41 @@ public class GameFieldTest {
     @Test
     public void BottomWallTest() throws FileNotFoundException {
         String testMapPath = "src/test/resources/TestMap.txt";
-        Wall testWall = new Wall(1);
+        Wall expectedWall = new Wall(1);
 
         GameField gameField = new GameField(testMapPath);
 
-        Assertions.assertEquals(testWall, gameField.getBorderReference(0, 1, Direction.BOTTOM));
+        Assertions.assertEquals(expectedWall, gameField.getBorderReference(0, 1, Direction.BOTTOM));
     }
 
     @Test
     public void TopWallTest() throws FileNotFoundException {
         String testMapPath = "src/test/resources/TestMap.txt";
-        Wall testWall = new Wall(1);
+        Wall expectedWall = new Wall(1);
 
         GameField gameField = new GameField(testMapPath);
 
-        Assertions.assertEquals(testWall, gameField.getBorderReference(3, 3, Direction.TOP));
+        Assertions.assertEquals(expectedWall, gameField.getBorderReference(3, 3, Direction.TOP));
     }
 
     @Test
     public void HorizontalPassageTest() throws FileNotFoundException {
         String testMapPath = "src/test/resources/TestMap.txt";
-        Wall testPassage = new Wall(0);
+        Wall expectedPassage = new Wall(0);
 
         GameField gameField = new GameField(testMapPath);
 
-        Assertions.assertEquals(testPassage, gameField.getBorderReference(1, 1, Direction.BOTTOM));
+        Assertions.assertEquals(expectedPassage, gameField.getBorderReference(1, 1, Direction.BOTTOM));
     }
 
     @Test
     public void OutOfLabyrinthPassageTest() throws FileNotFoundException {
         String testMapPath = "src/test/resources/TestMap.txt";
-        Wall testPassage = new Wall(0);
+        Wall expectedPassage = new Wall(0);
 
         GameField gameField = new GameField(testMapPath);
 
-        Assertions.assertEquals(testPassage, gameField.getBorderReference(3, 3, Direction.RIGHT));
+        Assertions.assertEquals(expectedPassage, gameField.getBorderReference(3, 3, Direction.RIGHT));
     }
 
     @Test
