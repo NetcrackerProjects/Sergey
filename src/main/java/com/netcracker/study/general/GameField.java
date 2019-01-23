@@ -18,7 +18,7 @@ public class GameField {
     public GameField(int width, int height) {
         this.width = width;
         this.height = height;
-        borders = new BorderObject[totalCountOfBorders(width, height)];
+        this.borders = new BorderObject[totalCountOfBorders(width, height)];
     }
 
     public GameField(String mapFilePath) throws FileNotFoundException {
@@ -34,7 +34,7 @@ public class GameField {
             int th = mapLines.size();
             this.width = (tw-1)/2;
             this.height = (th-1)/2;
-            borders = new BorderObject[totalCountOfBorders(width, height)];
+            this.borders = new BorderObject[totalCountOfBorders(width, height)];
 
             int borderindex;
             String curline;

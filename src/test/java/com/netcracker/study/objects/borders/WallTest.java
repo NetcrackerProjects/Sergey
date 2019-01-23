@@ -7,10 +7,10 @@ public class WallTest {
 
     @Test
     public void breakAndShootTest(){
-        Wall testWall = new Wall(1);
+        Wall wallWithOneLife = new Wall(1);
 
-        testWall.onGrenadeHit();
+        wallWithOneLife.onGrenadeHit();
 
-        Assertions.assertEquals(false, testWall.doesStopBullet());
+        Assertions.assertEquals(false, wallWithOneLife.doesStopBullet());
     }
 }

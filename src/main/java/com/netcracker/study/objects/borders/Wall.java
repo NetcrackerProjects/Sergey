@@ -31,7 +31,7 @@ public class Wall extends BorderObject{
     @Override
     public void onGrenadeHit(){
         if (this.thickness > 0) {
-            thickness = thickness-1;
+            thickness--;
         }
     }
 
