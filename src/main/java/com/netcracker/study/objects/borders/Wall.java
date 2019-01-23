@@ -1,5 +1,7 @@
 package com.netcracker.study.objects.borders;
 
+import java.util.Objects;
+
 public class Wall extends BorderObject{
 
     private int thickness;
@@ -10,20 +12,6 @@ public class Wall extends BorderObject{
 
     public Wall(int thickness) {
         this.thickness = thickness;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (this.getClass() != obj.getClass())
-            return false;
-        Wall other = (Wall) obj;
-        if (other.getThickness() != this.getThickness())
-            return false;
-        return true;
     }
 
     @Override
@@ -56,4 +44,16 @@ public class Wall extends BorderObject{
         return  thickness;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wall wall = (Wall) o;
+        return thickness == wall.thickness;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(thickness);
+    }
 }

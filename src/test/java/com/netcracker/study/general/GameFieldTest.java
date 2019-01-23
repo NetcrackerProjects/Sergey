@@ -2,6 +2,7 @@ package com.netcracker.study.general;
 
 import com.netcracker.study.objects.borders.Wall;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -16,10 +17,15 @@ public class GameFieldTest {
 
         GameField gameField = new GameField(testMapPath);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {gameField.getBorderReference(10, 20, Direction.RIGHT);});
         Assertions.assertEquals(testWall, gameField.getBorderReference(0, 1, Direction.BOTTOM));
         Assertions.assertEquals(testPassage, gameField.getBorderReference(1, 1, Direction.BOTTOM));
         Assertions.assertEquals(testWall, gameField.getBorderReference(3, 3, Direction.TOP));
         Assertions.assertEquals(testPassage, gameField.getBorderReference(3, 3, Direction.RIGHT));
+    }
+
+    @Test void OutOfBordersTest() {
+        GameField gameField = new GameField(2,4);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {gameField.getBorderReference(10, 20, Direction.RIGHT);});
     }
 }
