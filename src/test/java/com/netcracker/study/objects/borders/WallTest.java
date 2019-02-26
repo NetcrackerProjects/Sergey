@@ -1,7 +1,7 @@
 package com.netcracker.study.objects.borders;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.Assert;
 
 public class WallTest {
 
@@ -11,6 +11,6 @@ public class WallTest {
 
         wallWithOneLife.onGrenadeHit();
 
-        Assertions.assertEquals(false, wallWithOneLife.doesStopBullet());
+        Assert.assertEquals(false, wallWithOneLife.doesStopBullet());
     }
 }

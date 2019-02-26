@@ -2,17 +2,23 @@ package com.netcracker.study.general;
 
 import com.netcracker.study.objects.borders.BorderObject;
 import com.netcracker.study.objects.borders.Wall;
+import com.netcracker.study.objects.entities.Player;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class GameField {
     private int width;
     private int height;
     private BorderObject[] borders;
+    private Set<Player> players;
 
 
     public GameField(int width, int height) {
         this.width = width;
         this.height = height;
         this.borders = new BorderObject[totalCountOfBorders(width, height)];
+        this.players = new HashSet();
     }
 
     public int totalCountOfBorders(int width, int height){
@@ -41,6 +47,16 @@ public class GameField {
             index = y1*(2*width+1) + width + rightTile;
             return index;
         }
+    }
+
+    public Set<Player> getAllPlayersInTile(int X, int Y){
+        Set<Player> playersToReturn = new HashSet<>();
+        for (Player player : this.players) {
+            if ((player.getPositionX() == X) &&(player.getPositionY() == Y)) {
+                playersToReturn.add(player);
+            }
+        }
+        return playersToReturn;
     }
 
     private boolean tilesAreAdjacent(int x1, int x2, int y1, int y2) {
@@ -82,7 +98,6 @@ public class GameField {
     public void placeBorder (int x, int y, Direction dir, BorderObject border) {
         this.borders[getBorderByDirection(x, y, dir)] = border;
     }
-
 
     public BorderObject getBorderReference(int x, int y, Direction dir) {
         return this.borders[getBorderByDirection(x, y, dir)];

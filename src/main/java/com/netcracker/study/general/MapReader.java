@@ -16,7 +16,7 @@ public class MapReader {
         this.mapFilePath = mapFilePath;
     }
 
-    public GameField initMapFromFile() throws FileNotFoundException {
+    public GameField createGameFieldFromTextFile() throws FileNotFoundException {
         File mapFile = new File(mapFilePath);
         FileReader input = new FileReader(mapFile);
         Scanner scan = new Scanner(input);
@@ -24,36 +24,36 @@ public class MapReader {
         while (scan.hasNextLine()){
             mapLines.add(scan.nextLine());
         }
-        int tw = mapLines.get(0).length();
-        int th = mapLines.size();
-        int width = (tw-1)/2;
-        int height = (th-1)/2;
+        int totalWidth = mapLines.get(0).length();
+        int totalHeight = mapLines.size();
+        int width = (totalWidth-1)/2;
+        int height = (totalHeight-1)/2;
         GameField gameField = new GameField(width,height);
 
-        String curline;
-        for (int i = 0; i < height; i = i+1) {
-            curline = mapLines.get(th-1 - 2*i);
-            for (int j = 0; j < width; j = j + 1){
-                gameField.placeBorder(j ,i, Direction.BOTTOM, interpBorderSymbol(curline.charAt(1+j*2)));
+        String currentLine;
+        for (int i = 0; i < height; i++) {
+            currentLine = mapLines.get(totalHeight-1 - 2*i);
+            for (int j = 0; j < width; j++){
+                gameField.placeBorder(j ,i, Direction.BOTTOM, convertSymbolToObject(currentLine.charAt(1+j*2)));
             }
         }
-        curline = mapLines.get(0);
-        for (int j = 0; j < width; j = j + 1){
-            gameField.placeBorder(j, height-1, Direction.TOP, interpBorderSymbol(curline.charAt(1+j*2)));
+        currentLine = mapLines.get(0);
+        for (int j = 0; j < width; j++){
+            gameField.placeBorder(j, height-1, Direction.TOP, convertSymbolToObject(currentLine.charAt(1+j*2)));
         }
-        for (int i = 0; i < height; i = i+1) {
-            curline = mapLines.get(th - 2 - 2*i);
-            for (int j = 0; j < width; j = j + 1){
-                gameField.placeBorder(j, i, Direction.LEFT, interpBorderSymbol(curline.charAt(j*2)));
+        for (int i = 0; i < height; i++) {
+            currentLine = mapLines.get(totalHeight - 2 - 2*i);
+            for (int j = 0; j < width; j++){
+                gameField.placeBorder(j, i, Direction.LEFT, convertSymbolToObject(currentLine.charAt(j*2)));
             }
-            gameField.placeBorder(width-1, i, Direction.RIGHT, interpBorderSymbol(curline.charAt(width*2)));
+            gameField.placeBorder(width-1, i, Direction.RIGHT, convertSymbolToObject(currentLine.charAt(width*2)));
         }
 
         return gameField;
     }
 
-    private BorderObject interpBorderSymbol(char c) {
-        switch (c) {
+    private BorderObject convertSymbolToObject(char symbol) {
+        switch (symbol) {
             case ' ':
                 return new Wall(0);
             case '|':
@@ -61,6 +61,6 @@ public class MapReader {
             case  '-':
                 return new Wall(1);
         }
-        throw new IllegalArgumentException("Found illegal symbol while reading for borders: " + c);
+        throw new IllegalArgumentException("Found illegal symbol while reading for borders: " + symbol);
     }
 }

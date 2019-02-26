@@ -15,8 +15,8 @@ public class Wall extends BorderObject{
     }
 
     @Override
-    public void onShoot() {
-        //Nothing should happen, at least, until messages implementation
+    public String onShoot() {
+        return "";
     }
 
     @Override
