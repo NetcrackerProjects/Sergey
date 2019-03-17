@@ -1,7 +1,6 @@
 package com.netcracker.study.objects.entities;
 
 import com.netcracker.study.general.Direction;
-import com.netcracker.study.general.GameField;
 import com.netcracker.study.objects.borders.Shootable;
 
 public class Player implements Shootable {
@@ -9,25 +8,14 @@ public class Player implements Shootable {
     private String name;
     private int positionX, positionY;
     boolean alive;
-    private GameField parentGameField;
+    private int bullets;
 
-    public Player(int positionX, int positionY, String name, GameField parentGameField){
+    public Player(int positionX, int positionY, String name){
         this.positionX = positionX;
         this.positionY = positionY;
+        this.alive = true;
         this.name = name;
-        this.parentGameField = parentGameField;
-    }
-
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    public boolean isAlive() {
-        return alive;
+        this.bullets = 20;
     }
 
     @Override
@@ -45,15 +33,46 @@ public class Player implements Shootable {
         return false;
     }
 
-    public String shoot(Direction direction) {
-        StringBuilder returnString = new StringBuilder("Player " + name + " shoots to the " + direction + ". ");
-        if (parentGameField.getBorderReference(positionX, positionY, direction).doesStopBullet()){
-            returnString.append("Bullet hits the wall. ");
-        } else {
-            returnString.append("There is no wall. ");
-        }
-        Bullet bullet = new Bullet(this.positionX, this.positionY, direction, parentGameField);
-        returnString.append(bullet.launch());
-        return returnString.toString();
+    public void relocate(int newPositionX, int newPositionY){
+        this.positionX = newPositionX;
+        this.positionY = newPositionY;
     }
+
+    public void move(Direction direction) {
+        switch (direction){
+            case TOP:
+                positionY++;
+            case BOTTOM:
+                positionY--;
+            case LEFT:
+                positionX--;
+            case RIGHT:
+                positionX++;
+        }
+    }
+
+    public void spendBullet() {
+        this.bullets--;
+    }
+
+    public int getBullets() {
+        return bullets;
+    }
+
+    public int getPositionX() {
+        return positionX;
+    }
+
+    public int getPositionY() {
+        return positionY;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
 }

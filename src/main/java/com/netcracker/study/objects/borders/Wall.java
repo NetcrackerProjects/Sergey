@@ -29,6 +29,15 @@ public class Wall extends BorderObject{
     }
 
     @Override
+    public boolean doesStopMovement(){
+        if (this.thickness < 1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
     public void onGrenadeHit(){
         if (this.thickness > 0) {
             thickness--;

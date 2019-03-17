@@ -1,21 +1,34 @@
 package com.netcracker.study.objects.entities;
 
 import com.netcracker.study.general.Direction;
-import com.netcracker.study.general.GameField;
-import java.util.Set;
 
 public class Bullet {
     private int positionX, positionY;
     private Direction flightDirection;
     private boolean stopped;
-    private GameField parentGameField;
     private StringBuilder shootingResult;
 
-    Bullet(int positionX, int positionY, Direction flightDirection, GameField parentGameField){
+    public Bullet(int positionX, int positionY, Direction flightDirection){
         this.flightDirection = flightDirection;
         this.positionX = positionX;
         this.positionY = positionY;
-        this.parentGameField = parentGameField;
+        this.stopped = false;
+    }
+
+    public int getPositionX() {
+        return positionX;
+    }
+
+    public int getPositionY() {
+        return positionY;
+    }
+
+    public void stop(){
+        this.stopped = true;
+    }
+
+    public boolean isStopped(){
+        return this.stopped;
     }
 
     public String launch(){
@@ -25,26 +38,16 @@ public class Bullet {
         return shootingResult.toString();
     }
 
-    private void flyFurther(){
-        if (parentGameField.getBorderReference(this.positionX, this.positionY, this.flightDirection).doesStopBullet()) {
-            this.stopped = true;
-        }
-        if (!this.stopped) {
-            switch (flightDirection) {
-                case RIGHT:
-                    this.positionX++;
-                case LEFT:
-                    this.positionX--;
-                case BOTTOM:
-                    this.positionY--;
-                case TOP:
-                    this.positionY++;
-            }
-            Set<Player> affectedPlayers = parentGameField.getAllPlayersInTile(positionX, positionY);
-            for (Player player : affectedPlayers) {
-                this.shootingResult.append(player.onShoot());
-            }
-            this.flyFurther();
+    public void flyFurther(){
+        switch (flightDirection) {
+            case RIGHT:
+                this.positionX++; break;
+            case LEFT:
+                this.positionX--; break;
+            case BOTTOM:
+                this.positionY--; break;
+            case TOP:
+                this.positionY++; break;
         }
     }
 

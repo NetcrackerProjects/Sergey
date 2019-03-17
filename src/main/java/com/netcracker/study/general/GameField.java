@@ -21,6 +21,20 @@ public class GameField {
         this.players = new HashSet();
     }
 
+    public void addPlayer(int positionX, int positionY, String name){
+        Player player = new Player(positionX, positionY, name);
+        players.add(player);
+    }
+
+    public Player getPlayerByName(String name) {
+        for (Player player : players) {
+            if (player.getName().equals(name)){
+                return player;
+            }
+        }
+        return null;
+    }
+
     public int totalCountOfBorders(int width, int height){
         return ((2*width+1)*height + width);
     }
