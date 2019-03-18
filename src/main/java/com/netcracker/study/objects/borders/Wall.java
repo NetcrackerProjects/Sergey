@@ -29,7 +29,7 @@ public class Wall extends BorderObject{
     }
 
     @Override
-    public boolean doesStopMovement(){
+    public boolean isPassable(){
         if (this.thickness < 1){
             return false;
         } else {

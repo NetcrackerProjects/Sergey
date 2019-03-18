@@ -1,5 +1,7 @@
 package com.netcracker.study.general;
 
+import com.netcracker.study.general.Exceptions.NoSuchUserException;
+import com.netcracker.study.general.Exceptions.PhaseViolationException;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -8,35 +10,40 @@ import java.io.FileNotFoundException;
 public class GameTest {
 
     @Test
-    public void stoppedByWallTest() throws FileNotFoundException {
+    public void stoppedByWallTest() throws FileNotFoundException, NoSuchUserException, PhaseViolationException {
         Game game = new Game("src/test/resources/TestMap.txt");
-        game.addPlayer(1, 1, "Mover");
+        game.getPlayerManager().addPlayer(1, 1, "Mover");
+        game.start();
 
-        game.playerMoves(game.getGameField().getPlayerByName("Mover"),Direction.LEFT);
+        game.playerMoves(game.currentPlayer(),Direction.LEFT);
 
-        Assert.assertEquals(game.getGameField().getPlayerByName("Mover").getPositionX(), 1);
+        Assert.assertEquals(game.getPlayerManager().getPlayer("Mover").getPositionX(), 1);
     }
 
     @Test
-    public void droppingDeadTest() throws FileNotFoundException {
+    public void droppingDeadTest() throws FileNotFoundException, NoSuchUserException, PhaseViolationException {
         Game game = new Game("src/test/resources/TestMap.txt");
-        game.addPlayer(0, 0, "Shooter");
-        game.addPlayer(2, 0, "Player Two");
+        game.getPlayerManager().addPlayer(0, 0, "Shooter");
+        game.getPlayerManager().addPlayer(2, 0, "Player Two");
+        game.start();
 
-        game.playerShoots(game.getGameField().getPlayerByName("Shooter"),Direction.RIGHT);
+        System.out.println(game.currentPlayer().getName());
 
-        Assert.assertFalse(game.getGameField().getPlayerByName("Player Two").isAlive());
+        game.playerShoots(game.currentPlayer(),Direction.RIGHT);
+
+        Assert.assertFalse(game.getPlayerManager().getPlayer("Player Two").isAlive());
     }
 
     @Test
-    public void twoKillsTest() throws FileNotFoundException {
+    public void twoKillsTest() throws FileNotFoundException, PhaseViolationException {
         Game game = new Game("src/test/resources/TestMap.txt");
-        game.addPlayer(0, 0, "Shooter");
-        game.addPlayer(2, 0, "Player Two");
-        game.addPlayer(3, 0, "Player Three");
+        game.getPlayerManager().addPlayer(0, 0, "Shooter");
+        game.getPlayerManager().addPlayer(2, 0, "Player Two");
+        game.getPlayerManager().addPlayer(3, 0, "Player Three");
+        game.start();
         String expectedMessage = "Player Shooter shoots to the RIGHT. Player Two is killed. Player Three is killed. ";
 
-        Assert.assertEquals(game.playerShoots(game.getGameField().getPlayerByName("Shooter"),Direction.RIGHT), expectedMessage);
+        Assert.assertEquals(game.playerShoots(game.currentPlayer(),Direction.RIGHT), expectedMessage);
     }
 
 }

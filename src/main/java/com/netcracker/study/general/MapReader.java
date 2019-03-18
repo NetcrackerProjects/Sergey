@@ -6,14 +6,14 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MapReader {
+class MapReader {
     private String mapFilePath;
 
-    public MapReader(String mapFilePath) {
+    MapReader(String mapFilePath) {
         this.mapFilePath = mapFilePath;
     }
 
-    public GameField createGameFieldFromTextFile() throws FileNotFoundException {
+    GameField createGameFieldFromTextFile() throws FileNotFoundException {
         File mapFile = new File(mapFilePath);
         FileReader input = new FileReader(mapFile);
         Scanner scan = new Scanner(input);

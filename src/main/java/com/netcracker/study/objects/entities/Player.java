@@ -3,11 +3,10 @@ package com.netcracker.study.objects.entities;
 import com.netcracker.study.general.Direction;
 import com.netcracker.study.objects.borders.Shootable;
 
-public class Player implements Shootable {
+public class Player extends Entity implements Shootable{
 
     private String name;
-    private int positionX, positionY;
-    boolean alive;
+    private boolean alive;
     private int bullets;
 
     public Player(int positionX, int positionY, String name){
@@ -42,13 +41,22 @@ public class Player implements Shootable {
         switch (direction){
             case TOP:
                 positionY++;
+                break;
             case BOTTOM:
                 positionY--;
+                break;
             case LEFT:
                 positionX--;
+                break;
             case RIGHT:
                 positionX++;
+                break;
         }
+    }
+
+    public Bullet shoot(Direction direction) {
+        this.bullets--;
+        return new Bullet(positionX, positionY, direction);
     }
 
     public void spendBullet() {
@@ -57,14 +65,6 @@ public class Player implements Shootable {
 
     public int getBullets() {
         return bullets;
-    }
-
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
     }
 
     public String getName(){

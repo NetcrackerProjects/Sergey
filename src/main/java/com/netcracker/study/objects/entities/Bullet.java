@@ -2,52 +2,39 @@ package com.netcracker.study.objects.entities;
 
 import com.netcracker.study.general.Direction;
 
-public class Bullet {
-    private int positionX, positionY;
+public class Bullet extends Entity{
     private Direction flightDirection;
     private boolean stopped;
-    private StringBuilder shootingResult;
 
-    public Bullet(int positionX, int positionY, Direction flightDirection){
+    public Bullet(int positionX, int positionY, Direction flightDirection) {
         this.flightDirection = flightDirection;
         this.positionX = positionX;
         this.positionY = positionY;
         this.stopped = false;
     }
 
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    public void stop(){
+    public void stop() {
         this.stopped = true;
     }
 
-    public boolean isStopped(){
-        return this.stopped;
+    public boolean isStopped() {
+        return stopped;
     }
 
-    public String launch(){
-        this.shootingResult = new StringBuilder();
-        this.stopped = false;
-        this.flyFurther();
-        return shootingResult.toString();
-    }
-
-    public void flyFurther(){
+    public void fly() {
         switch (flightDirection) {
             case RIGHT:
-                this.positionX++; break;
+                this.positionX++;
+                break;
             case LEFT:
-                this.positionX--; break;
+                this.positionX--;
+                break;
             case BOTTOM:
-                this.positionY--; break;
+                this.positionY--;
+                break;
             case TOP:
-                this.positionY++; break;
+                this.positionY++;
+                break;
         }
     }
 

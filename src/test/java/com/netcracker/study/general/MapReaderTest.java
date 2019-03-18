@@ -23,7 +23,7 @@ public class MapReaderTest {
 
         GameField gameField = mapReader.createGameFieldFromTextFile();
 
-        Assert.assertEquals(expectedWall, gameField.getBorderReference(0, 1, Direction.BOTTOM));
+        Assert.assertEquals(expectedWall, gameField.getBorderAt(0, 1, Direction.BOTTOM));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class MapReaderTest {
 
         GameField gameField = mapReader.createGameFieldFromTextFile();
 
-        Assert.assertEquals(expectedWall, gameField.getBorderReference(3, 3, Direction.TOP));
+        Assert.assertEquals(expectedWall, gameField.getBorderAt(3, 3, Direction.TOP));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class MapReaderTest {
 
         GameField gameField = mapReader.createGameFieldFromTextFile();
 
-        Assert.assertEquals(expectedPassage, gameField.getBorderReference(3, 3, Direction.RIGHT));
+        Assert.assertEquals(expectedPassage, gameField.getBorderAt(3, 3, Direction.RIGHT));
     }
 
     @Test
@@ -53,6 +53,6 @@ public class MapReaderTest {
 
         GameField gameField = mapReader.createGameFieldFromTextFile();
 
-        Assert.assertEquals(expectedPassage, gameField.getBorderReference(1, 1, Direction.BOTTOM));
+        Assert.assertEquals(expectedPassage, gameField.getBorderAt(1, 1, Direction.BOTTOM));
     }
 }

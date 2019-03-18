@@ -14,6 +14,7 @@ public class MapObjectFactory {
             case  '-':
                 return new Wall(1);
         }
+
         throw new IllegalArgumentException("Found illegal symbol while reading for borders: " + symbol);
     }
 }

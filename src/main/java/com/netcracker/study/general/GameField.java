@@ -2,40 +2,20 @@ package com.netcracker.study.general;
 
 import com.netcracker.study.objects.borders.BorderObject;
 import com.netcracker.study.objects.borders.Wall;
-import com.netcracker.study.objects.entities.Player;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.netcracker.study.objects.entities.Entity;
 
 public class GameField {
     private int width;
     private int height;
     private BorderObject[] borders;
-    private Set<Player> players;
 
-
-    public GameField(int width, int height) {
+    GameField(int width, int height) {
         this.width = width;
         this.height = height;
         this.borders = new BorderObject[totalCountOfBorders(width, height)];
-        this.players = new HashSet();
     }
 
-    public void addPlayer(int positionX, int positionY, String name){
-        Player player = new Player(positionX, positionY, name);
-        players.add(player);
-    }
-
-    public Player getPlayerByName(String name) {
-        for (Player player : players) {
-            if (player.getName().equals(name)){
-                return player;
-            }
-        }
-        return null;
-    }
-
-    public int totalCountOfBorders(int width, int height){
+    private int totalCountOfBorders(int width, int height){
         return ((2*width+1)*height + width);
     }
 
@@ -63,16 +43,6 @@ public class GameField {
         }
     }
 
-    public Set<Player> getAllPlayersInTile(int X, int Y){
-        Set<Player> playersToReturn = new HashSet<>();
-        for (Player player : this.players) {
-            if ((player.getPositionX() == X) &&(player.getPositionY() == Y)) {
-                playersToReturn.add(player);
-            }
-        }
-        return playersToReturn;
-    }
-
     private boolean tilesAreAdjacent(int x1, int x2, int y1, int y2) {
         if (Math.abs(x1 - x2) > 1) return false;
         if  (Math.abs(y1 - y2) > 1) return false;
@@ -80,7 +50,7 @@ public class GameField {
         return true;
     }
 
-    private boolean tileWithinGameBorders(int x, int y) {
+    boolean tileWithinGameBorders(int x, int y) {
         if (x < 0 || y < 0) return false;
         if (x > width || y > height ) return false;
         return true;
@@ -109,12 +79,16 @@ public class GameField {
         this.borders[getBorderByDirection(x, y, dir)] = (BorderObject) C.newInstance();
     }
 
-    public void placeBorder (int x, int y, Direction dir, BorderObject border) {
+    void placeBorder (int x, int y, Direction dir, BorderObject border) {
         this.borders[getBorderByDirection(x, y, dir)] = border;
     }
 
-    public BorderObject getBorderReference(int x, int y, Direction dir) {
-        return this.borders[getBorderByDirection(x, y, dir)];
+    BorderObject getBorderAt(int x, int y, Direction direction) {
+        return this.borders[getBorderByDirection(x, y, direction)];
+    }
+
+    BorderObject getBorderAt(Entity entity, Direction direction) {
+        return this.borders[getBorderByDirection(entity.getPositionX(), entity.getPositionY(), direction)];
     }
 
 }
