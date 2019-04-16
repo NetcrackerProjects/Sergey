@@ -4,5 +4,18 @@ public enum Direction {
     TOP,
     BOTTOM,
     LEFT,
-    RIGHT
+    RIGHT;
+
+    private Direction opposite;
+
+    static {
+        TOP.opposite = BOTTOM;
+        BOTTOM.opposite = TOP;
+        LEFT.opposite = RIGHT;
+        RIGHT.opposite = LEFT;
+    }
+
+    public Direction getOpposite() {
+        return opposite;
+    }
 }

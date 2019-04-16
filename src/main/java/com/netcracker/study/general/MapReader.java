@@ -7,47 +7,65 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 class MapReader {
-    private String mapFilePath;
+    private File mapFile;
+    private ArrayList<String> mapLines;
+    private int totalWidth, totalHeight, width, height;
+    private MapObjectFactory objectFactory;
+    private GameField gameField;
 
-    MapReader(String mapFilePath) {
-        this.mapFilePath = mapFilePath;
+    MapReader(String mapFilePath) throws FileNotFoundException {
+        this.mapFile = new File(mapFilePath);
+        scanTextFile();
+        this.objectFactory = new MapObjectFactory();
     }
 
-    GameField createGameFieldFromTextFile() throws FileNotFoundException {
-        File mapFile = new File(mapFilePath);
-        FileReader input = new FileReader(mapFile);
-        Scanner scan = new Scanner(input);
-        ArrayList<String> mapLines = new ArrayList<String>();
-        MapObjectFactory objectFactory = new MapObjectFactory();
-        while (scan.hasNextLine()){
-            mapLines.add(scan.nextLine());
-        }
-        int totalWidth = mapLines.get(0).length();
-        int totalHeight = mapLines.size();
-        int width = (totalWidth-1)/2;
-        int height = (totalHeight-1)/2;
-        GameField gameField = new GameField(width,height);
-
-        String currentLine;
-        for (int i = 0; i < height; i++) {
-            currentLine = mapLines.get(totalHeight-1 - 2*i);
-            for (int j = 0; j < width; j++){
-                gameField.placeBorder(j ,i, Direction.BOTTOM, objectFactory.convertSymbolToBorderObject(currentLine.charAt(1+j*2)));
-            }
-        }
-        currentLine = mapLines.get(0);
-        for (int j = 0; j < width; j++){
-            gameField.placeBorder(j, height-1, Direction.TOP, objectFactory.convertSymbolToBorderObject(currentLine.charAt(1+j*2)));
-        }
-        for (int i = 0; i < height; i++) {
-            currentLine = mapLines.get(totalHeight - 2 - 2*i);
-            for (int j = 0; j < width; j++){
-                gameField.placeBorder(j, i, Direction.LEFT, objectFactory.convertSymbolToBorderObject(currentLine.charAt(j*2)));
-            }
-            gameField.placeBorder(width-1, i, Direction.RIGHT, objectFactory.convertSymbolToBorderObject(currentLine.charAt(width*2)));
-        }
-
+    GameField createGameFieldFromTextFile() {
+        this.gameField = new GameField(width, height);
+        addAllHorizontalBorders();
+        addAllVerticalBorders();
         return gameField;
     }
 
+    private void scanTextFile() throws FileNotFoundException {
+        FileReader input = new FileReader(mapFile);
+        Scanner scan = new Scanner(input);
+        this.mapLines = new ArrayList<>();
+        while (scan.hasNextLine()) {
+            mapLines.add(scan.nextLine());
+        }
+        this.totalWidth = mapLines.get(0).length();
+        this.totalHeight = mapLines.size();
+        this.width = (totalWidth - 1) / 2;
+        this.height = (totalHeight - 1) / 2;
+    }
+
+    private void addAllHorizontalBorders() {
+        for (int i = 0; i <= height; i++) {
+            readHorizontalBorderRow(i);
+        }
+    }
+
+    private void readHorizontalBorderRow(int rownum) {
+        String currentLine = mapLines.get(tileRowIndex(rownum) + 1);
+        for (int j = 0; j < width; j++) {
+            gameField.placeBorder(j, rownum, Direction.BOTTOM, objectFactory.convertSymbolToBorderObject(currentLine.charAt(1 + j * 2)));
+        }
+    }
+
+    private void addAllVerticalBorders() {
+        for (int i = 0; i < height; i++) {
+            readVerticalBorderRow(i);
+        }
+    }
+
+    private void readVerticalBorderRow(int rownum) {
+        String currentLine = mapLines.get(tileRowIndex(rownum));
+        for (int j = 0; j <= width; j++) {
+            gameField.placeBorder(j, rownum, Direction.LEFT, objectFactory.convertSymbolToBorderObject(currentLine.charAt(j * 2)));
+        }
+    }
+
+    private int tileRowIndex(int x) {
+        return totalHeight - 2 - 2 * x;
+    }
 }

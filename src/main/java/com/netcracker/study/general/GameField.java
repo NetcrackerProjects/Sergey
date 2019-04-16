@@ -15,8 +15,8 @@ public class GameField {
         this.borders = new BorderObject[totalCountOfBorders(width, height)];
     }
 
-    private int totalCountOfBorders(int width, int height){
-        return ((2*width+1)*height + width);
+    private int totalCountOfBorders(int width, int height) {
+        return ((2 * width + 1) * height + width);
     }
 
     private Integer getBorderBetweenTiles(int x1, int x2, int y1, int y2) throws IllegalArgumentException {
@@ -27,32 +27,32 @@ public class GameField {
         if (x1 - x2 == 0 && y1 - y2 == 0) {
             throw new IllegalArgumentException("Tiles selected are actually the same tile => unable to determine border");
         }
-        if (!tileWithinGameBorders(x1, y1) && !tileWithinGameBorders(x2,y2)) {
+        if (!tileWithinGameBorders(x1, y1) && !tileWithinGameBorders(x2, y2)) {
             throw new IllegalArgumentException("One of the tiles is not at least adjacent to game space!");
         }
 
         Integer index;
         if (x1 == x2) {
             int topTile = Math.max(y1, y2);
-            index = topTile*(2*width+1) + x1;
+            index = topTile * (2 * width + 1) + x1;
             return index;
         } else {
             int rightTile = Math.max(x1, x2);
-            index = y1*(2*width+1) + width + rightTile;
+            index = y1 * (2 * width + 1) + width + rightTile;
             return index;
         }
     }
 
     private boolean tilesAreAdjacent(int x1, int x2, int y1, int y2) {
         if (Math.abs(x1 - x2) > 1) return false;
-        if  (Math.abs(y1 - y2) > 1) return false;
+        if (Math.abs(y1 - y2) > 1) return false;
         if (x1 - x2 != 0 && y1 - y2 != 0) return false;
         return true;
     }
 
     boolean tileWithinGameBorders(int x, int y) {
         if (x < 0 || y < 0) return false;
-        if (x > width || y > height ) return false;
+        if (x > width || y > height) return false;
         return true;
     }
 
@@ -60,26 +60,18 @@ public class GameField {
 
         switch (dir) {
             case TOP:
-                return getBorderBetweenTiles(x, x, y, y+1);
+                return getBorderBetweenTiles(x, x, y, y + 1);
             case BOTTOM:
-                return getBorderBetweenTiles(x, x, y, y-1);
+                return getBorderBetweenTiles(x, x, y, y - 1);
             case LEFT:
-                return getBorderBetweenTiles(x, x-1, y, y);
+                return getBorderBetweenTiles(x, x - 1, y, y);
             case RIGHT:
-                return getBorderBetweenTiles(x, x+1, y, y);
+                return getBorderBetweenTiles(x, x + 1, y, y);
         }
         throw new RuntimeException("You somehow managed to circumvent full switch on destination enum. What");
     }
 
-    public void placeWall (int x, int y, Direction dir, int thickness) {
-        this.borders[getBorderByDirection(x, y, dir)] = new Wall(thickness);
-    }
-
-    public void placeBorderDefault (int x, int y, Direction dir, Class C) throws InstantiationException, IllegalAccessException{
-        this.borders[getBorderByDirection(x, y, dir)] = (BorderObject) C.newInstance();
-    }
-
-    void placeBorder (int x, int y, Direction dir, BorderObject border) {
+    void placeBorder(int x, int y, Direction dir, BorderObject border) {
         this.borders[getBorderByDirection(x, y, dir)] = border;
     }
 

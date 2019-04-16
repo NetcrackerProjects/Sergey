@@ -2,14 +2,13 @@ package com.netcracker.study.objects.entities;
 
 import com.netcracker.study.general.Direction;
 
-public class Bullet extends Entity{
+public class Bullet extends Entity {
     private Direction flightDirection;
     private boolean stopped;
 
     public Bullet(int positionX, int positionY, Direction flightDirection) {
+        super(positionX, positionY);
         this.flightDirection = flightDirection;
-        this.positionX = positionX;
-        this.positionY = positionY;
         this.stopped = false;
     }
 

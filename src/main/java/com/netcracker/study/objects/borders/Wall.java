@@ -2,7 +2,7 @@ package com.netcracker.study.objects.borders;
 
 import java.util.Objects;
 
-public class Wall extends BorderObject{
+public class Wall extends BorderObject {
 
     private int thickness;
 
@@ -15,13 +15,12 @@ public class Wall extends BorderObject{
     }
 
     @Override
-    public String onShoot() {
-        return "";
+    public void onShoot() {
     }
 
     @Override
-    public boolean doesStopBullet(){
-        if (this.thickness < 1){
+    public boolean doesStopBullet() {
+        if (this.thickness < 1) {
             return false;
         } else {
             return true;
@@ -29,8 +28,8 @@ public class Wall extends BorderObject{
     }
 
     @Override
-    public boolean isPassable(){
-        if (this.thickness < 1){
+    public boolean isPassable() {
+        if (this.thickness < 1) {
             return false;
         } else {
             return true;
@@ -38,7 +37,7 @@ public class Wall extends BorderObject{
     }
 
     @Override
-    public void onGrenadeHit(){
+    public void onGrenadeHit() {
         if (this.thickness > 0) {
             thickness--;
         }
@@ -50,7 +49,7 @@ public class Wall extends BorderObject{
     }
 
     public int getThickness() {
-        return  thickness;
+        return thickness;
     }
 
     @Override

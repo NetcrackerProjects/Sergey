@@ -3,27 +3,24 @@ package com.netcracker.study.objects.entities;
 import com.netcracker.study.general.Direction;
 import com.netcracker.study.objects.borders.Shootable;
 
-public class Player extends Entity implements Shootable{
+public class Player extends Entity implements Shootable {
 
     private String name;
     private boolean alive;
     private int bullets;
+    private boolean hasTreasure;
 
-    public Player(int positionX, int positionY, String name){
-        this.positionX = positionX;
-        this.positionY = positionY;
+    public Player(int positionX, int positionY, String name) {
+        super(positionX, positionY);
         this.alive = true;
         this.name = name;
         this.bullets = 20;
     }
 
     @Override
-    public String onShoot() {
+    public void onShoot() {
         if (isAlive()) {
             this.alive = false;
-            return (name + " is killed. ");
-        } else {
-            return "";
         }
     }
 
@@ -32,13 +29,13 @@ public class Player extends Entity implements Shootable{
         return false;
     }
 
-    public void relocate(int newPositionX, int newPositionY){
+    public void relocate(int newPositionX, int newPositionY) {
         this.positionX = newPositionX;
         this.positionY = newPositionY;
     }
 
     public void move(Direction direction) {
-        switch (direction){
+        switch (direction) {
             case TOP:
                 positionY++;
                 break;
@@ -59,20 +56,20 @@ public class Player extends Entity implements Shootable{
         return new Bullet(positionX, positionY, direction);
     }
 
-    public void spendBullet() {
-        this.bullets--;
-    }
-
     public int getBullets() {
         return bullets;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
     public boolean isAlive() {
         return alive;
+    }
+
+    public boolean hasTreasure() {
+        return hasTreasure;
     }
 
 }

@@ -11,7 +11,7 @@ public class MapObjectFactory {
                 return new Wall(0);
             case '|':
                 return new Wall(1);
-            case  '-':
+            case '-':
                 return new Wall(1);
         }
 

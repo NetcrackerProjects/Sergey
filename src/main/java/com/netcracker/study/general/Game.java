@@ -1,6 +1,10 @@
 package com.netcracker.study.general;
 
 import com.netcracker.study.general.Exceptions.PhaseViolationException;
+import com.netcracker.study.general.messaging.EndTurnResult;
+import com.netcracker.study.general.messaging.EventResult;
+import com.netcracker.study.general.messaging.MoveResult;
+import com.netcracker.study.general.messaging.ShootResult;
 import com.netcracker.study.objects.entities.Bullet;
 import com.netcracker.study.objects.entities.Player;
 
@@ -10,85 +14,94 @@ import java.util.List;
 public class Game {
     private GameField gameField;
     private PlayerManager playerManager;
-    private int currentPlayer;
+    private int currentPlayerIndex;
     private Phase currentPhase;
 
     public Game(String mapFilePath) throws FileNotFoundException {
         MapReader mapReader = new MapReader(mapFilePath);
         this.gameField = mapReader.createGameFieldFromTextFile();
-        playerManager = new PlayerManager(gameField);
+        this.playerManager = new PlayerManager(gameField);
     }
 
-
-    public void start(){
+    public void start() {
         this.newRound();
     }
 
-    private void endTurn(){
-        if (currentPlayer ==  playerManager.numberOfPlayers() - 1) {
+    private void endTurn() {
+        if (currentPlayerIndex == playerManager.numberOfPlayers() - 1) {
             newRound();
         } else {
-            currentPlayer++;
+            currentPlayerIndex++;
+            this.currentPhase = Phase.PRE_MOVE;
         }
     }
 
-    Player currentPlayer(){
-        return playerManager.getPlayer(currentPlayer);
+    Player currentPlayer() {
+        return playerManager.getPlayer(currentPlayerIndex);
     }
 
-    private void newRound(){
-        this.currentPlayer = 0;
+    private void newRound() {
+        this.currentPlayerIndex = 0;
         this.currentPhase = Phase.PRE_MOVE;
     }
 
-    String playerShoots(Player player, Direction direction) throws  PhaseViolationException{
+    EventResult playerShoots(Player player, Direction direction) throws PhaseViolationException {
         if (this.currentPhase == Phase.POST_MOVE || this.currentPhase == Phase.MOVE) {
             throw new PhaseViolationException(currentPhase);
         }
 
+        ShootResult shootResult = new ShootResult(player, direction);
         if (player.getBullets() <= 0) {
-            return player.getName() + " tries to shoot, but there is no ammo.";
+            shootResult.failedShotNoAmmo();
+            return shootResult;
         }
 
-        StringBuilder returnString = new StringBuilder("Player " + player.getName() + " shoots to the " + direction + ". ");
-        if (gameField.getBorderAt(player, direction).doesStopBullet()){
-            returnString.append("There is a wall.");
+        if (gameField.getBorderAt(player, direction).doesStopBullet()) {
+            shootResult.setStoppedByWall(true);
+            return shootResult;
         } else {
             Bullet bullet = player.shoot(direction);
-            while (!bullet.isStopped()){
+            while (!bullet.isStopped()) {
                 bullet.fly();
-                List<Player> killedPlayers = playerManager.getAllPlayersInTile(bullet.getPositionX(),bullet.getPositionY());
-                killedPlayers.forEach(playerKilled -> returnString.append(playerKilled.onShoot()));
-                if (gameField.getBorderAt(bullet, direction).doesStopBullet()){
+                List<Player> killedPlayers = playerManager.getAllPlayersInTile(bullet.getPositionX(), bullet.getPositionY());
+                killedPlayers.forEach(shootResult::addKilledPlayer);
+                killedPlayers.forEach(Player::onShoot);
+                if (gameField.getBorderAt(bullet, direction).doesStopBullet()) {
                     bullet.stop();
                 }
             }
         }
 
-        return returnString.toString();
+        return shootResult;
     }
 
-    String playerMoves(Player player, Direction moveDirection) throws PhaseViolationException {
+    EventResult playerMoves(Player player, Direction moveDirection) throws PhaseViolationException {
         if (this.currentPhase == Phase.POST_MOVE || this.currentPhase == Phase.MOVE) {
             throw new PhaseViolationException(currentPhase);
         }
         this.currentPhase = Phase.MOVE;
-        StringBuilder returnString = new StringBuilder("Player " + player.getName() + " moves to the " + moveDirection +". ");
+        MoveResult moveResult = new MoveResult(player, moveDirection);
         if (gameField.getBorderAt(player, moveDirection).isPassable()) {
-            returnString.append("But the wall stops the movement, so he stays in place.");
+            moveResult.stoppedByWall();
         } else {
             player.move(moveDirection);
+            if (!gameField.tileWithinGameBorders(player.getPositionX(), player.getPositionY())) {
+                moveResult.movedOutsideLabyrinth();
+                player.move(moveDirection.getOpposite());
+            }
         }
         this.currentPhase = Phase.POST_MOVE;
-        return returnString.toString();
+        return moveResult;
     }
 
-    GameField getGameField() {
-        return this.gameField;
+    EventResult playerEndsTurn() {
+        EndTurnResult endTurnResult = new EndTurnResult(playerManager.getPlayer(currentPlayerIndex));
+        endTurn();
+        endTurnResult.setNewPlayer(playerManager.getPlayer(currentPlayerIndex));
+        return endTurnResult;
     }
 
     PlayerManager getPlayerManager() {
         return this.playerManager;
     }
-
 }

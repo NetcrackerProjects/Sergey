@@ -1,17 +1,16 @@
 package com.netcracker.study.objects.borders;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
+import org.junit.Assert;
 
 public class WallTest {
 
     @Test
-    public void shouldNotStopBulletAfterBeingDestroyedByGrenade() {
+    public void breakAndShootTest(){
         Wall wallWithOneLife = new Wall(1);
 
         wallWithOneLife.onGrenadeHit();
 
-        assertFalse(wallWithOneLife.doesStopBullet());
+        Assert.assertEquals(false, wallWithOneLife.doesStopBullet());
     }
 }
